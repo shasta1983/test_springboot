@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -48,11 +50,13 @@ class TutorialControllerTest {
     void getAllTutorials() throws Exception {
         Tutorial tutorial = new Tutorial("test", "test description", true);
         tutorial.setId(1L);
+        List<Tutorial> tutorialList = new ArrayList<>();
+        tutorialList.add(tutorial);
 
-        Mockito.when(tutorialRepository.findById(1L)).thenReturn(Optional.of(tutorial));
-        mockMvc.perform(MockMvcRequestBuilders.get("tutorials/"+1L))
+        Mockito.when(tutorialRepository.findAll()).thenReturn(tutorialList);
+        mockMvc.perform(MockMvcRequestBuilders.get("/tutorials"))
                 .andExpect(status().isOk());
-        Mockito.verify(tutorialRepository, times(1)).getReferenceById(eq(tutorial.getId()));
+        Mockito.verify(tutorialList);
         }
 
     @Test

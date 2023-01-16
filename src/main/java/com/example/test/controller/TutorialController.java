@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.test.repository.TutorialRepository;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8090")
 @RestController
 @RequestMapping("/api")
 public class TutorialController {
@@ -30,14 +30,11 @@ public class TutorialController {
     TutorialRepository tutorialRepository;
 
     @GetMapping("/tutorials")
-    public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<Tutorial>> getAllTutorials() {
         try {
             List<Tutorial> tutorials = new ArrayList<>();
 
-            if (title == null)
-                tutorialRepository.findAll().forEach(tutorials::add);
-            else
-                tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
+           tutorials = tutorialRepository.findAll();
 
             if (tutorials.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -76,11 +73,11 @@ public class TutorialController {
         Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
 
         if (tutorialData.isPresent()) {
-            Tutorial _tutorial = tutorialData.get();
-            _tutorial.setTitle(tutorial.getTitle());
-            _tutorial.setDescription(tutorial.getDescription());
-            _tutorial.setPublished(tutorial.isPublished());
-            return new ResponseEntity<>(tutorialRepository.save(_tutorial), HttpStatus.OK);
+            Tutorial tutorialnew = tutorialData.get();
+            tutorialnew.setTitle(tutorial.getTitle());
+            tutorialnew.setDescription(tutorial.getDescription());
+            tutorialnew.setPublished(tutorial.isPublished());
+            return new ResponseEntity<>(tutorialRepository.save(tutorialnew), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
